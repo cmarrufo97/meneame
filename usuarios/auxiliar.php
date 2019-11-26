@@ -4,7 +4,7 @@ function barraLogin()
 {
     ?>
     <nav id="barra" class="navbar navbar-expand-lg navbar-light">
-        <a id="titulo" class="navbar-brand" href="/index.php">Menéame</a>
+        <a id="titulo" class="navbar-brand" href="/index.php"> <img src="../iconos/logo2.png" alt="Logo"> menéame</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -26,7 +26,7 @@ function barraRegistrar()
 {
     ?>
     <nav id="barra" class="navbar navbar-expand-lg navbar-light">
-        <a id="titulo" class="navbar-brand" href="/index.php">Menéame</a>
+        <a id="titulo" class="navbar-brand" href="/index.php"> <img src="../iconos/logo2.png" alt="Logo"> menéame</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
