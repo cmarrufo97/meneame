@@ -4,7 +4,7 @@ function barra()
 {
     ?>
     <nav id="barra" class="navbar navbar-expand-lg navbar-light">
-        <a id="titulo" class="navbar-brand" href="/index.php"><img src="./iconos/logo2.png" alt="Logo"> menéame</a>
+        <a id="titulo" class="navbar-brand" href="/index.php"><img src="../iconos/logo2.png" alt="Logo"> menéame</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -22,10 +22,10 @@ function barra()
                     <li class="nav-link">
                         <a id="login" class="nav-link" href="/usuarios/login.php">Login</a>
                     </li>
+                    <li class="nav-link">
+                        <a id="register" class="nav-link" href="/usuarios/registrar.php">Registrarse</a>
+                    </li>
                 <?php endif ?>
-                <li class="nav-link">
-                    <a id="register" class="nav-link" href="/usuarios/registrar.php">Registrarse</a>
-                </li>
                 <!-- <button type="button" class="btn btn-primary mr-1">Login</button>
                 <button type="button" class="btn btn-success">Registrarse</button> -->
             </ul>

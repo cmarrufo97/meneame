@@ -12,8 +12,7 @@
 <body>
     <?php
     require __DIR__ . '/../auxiliar.php';
-    require __DIR__ . '/auxiliar.php';
-    barraLogin();
+    barra();
     dibujarFormularioLogin();
     ?>
     <!-- Optional JavaScript -->
