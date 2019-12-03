@@ -10,14 +10,14 @@ function barra()
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-            <?php if (logueado()): ?>
-                    <span class="navbar-text mr-2">
+                <?php if (logueado()) : ?>
+                    <span class="navbar-text text-white mr-2">
                         <?= logueado() ?>
                     </span>
                     <form class="form-inline my-2 my-lg-0" action="/usuarios/logout.php" method="post">
-                        <button class="btn btn-success my-2 my-sm-0" type="submit">Logout</button>
+                        <button class="btn btn-link text-white my-2 my-sm-0" type="submit">Logout</button>
                     </form>
-                <?php else: ?>
+                <?php else : ?>
                     <!-- <a class="nav-link" href="/usuarios/login.php">Login</a> -->
                     <li class="nav-link">
                         <a id="login" class="nav-link" href="/usuarios/login.php">Login</a>
@@ -45,14 +45,14 @@ function dibujarFormularioLogin()
     <div class="container">
         <div class="row justify-content-center mt-5">
             <div class="col-6">
-                <form action="">
+                <form action="" method="POST">
                     <div class="form-group">
                         <label for="usuario">Usuario</label>
-                        <input type="text" class="form-control" id="usuario" placeholder="Introduce nombre de usuario">
+                        <input type="text" class="form-control" id="usuario" name="login" placeholder="Introduce nombre de usuario">
                     </div>
                     <div class="form-group">
                         <label for="contraseña">Contraseña</label>
-                        <input type="password" class="form-control" id="contraseña" placeholder="Introduce tu contraseña">
+                        <input type="password" class="form-control" id="contraseña" name="password" placeholder="Introduce tu contraseña">
                     </div>
                     <!-- <div class="form-group form-check">
                         <input type="checkbox" class="form-check-input" id="exampleCheck1">
@@ -77,19 +77,19 @@ function dibujarFormularioRegistro()
                 <form action="">
                     <div class="form-group">
                         <label for="nombreUsuario">Nombre de usuario</label>
-                        <input type="text" class="form-control" id="nombreUsuario" placeholder="Introduce nombre de usuario">
+                        <input type="text" class="form-control" name="user" id="nombreUsuario" placeholder="Introduce nombre de usuario">
                     </div>
                     <div class="form-group">
                         <label for="contraseña">Contraseña</label>
-                        <input type="password" class="form-control" id="contraseña" placeholder="Introduce tu contraseña">
+                        <input type="password" class="form-control" name="password" id="contraseña" placeholder="Introduce tu contraseña">
                     </div>
                     <div class="form-group">
                         <label for="confirmar">Confirmar contraseña</label>
-                        <input type="password" class="form-control" id="confirmar" placeholder="Introduce de nuevo la contraseña">
+                        <input type="password" class="form-control" id="confirmar" name="password_confirm" placeholder="Introduce de nuevo la contraseña">
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="Introduce tu email">
+                        <input type="email" class="form-control" name="email" id="email" placeholder="Introduce tu email">
                     </div>
                     <!-- <div class="form-group form-check">
                         <input type="checkbox" class="form-check-input" id="exampleCheck1">
@@ -143,7 +143,7 @@ function getCategoria($pdo, $titulo)
     return $categoria;
 }
 
-function dibujarFormularioNoticia()
+function dibujarFormularioNoticia($pdo)
 {
     ?>
     <div id="form-login" class="container">
@@ -160,8 +160,17 @@ function dibujarFormularioNoticia()
                     </div>
                     <div class="form-group">
                         <label for="categoria">Introduzca la categoria de la noticia</label>
-                        <input type="text" class="form-control" id="categoria" name="categoria" placeholder="Introduce de nuevo la contraseña">
+                        <!-- <input type="text" class="form-control" id="categoria" name="categoria" placeholder="Introduce de nuevo la contraseña"> -->
                         <!-- aqui es mejor hacer un select... -->
+                        <select name="categoria" id="categoria" class="form-control">
+                            <?php
+                                $sent = $pdo->prepare('SELECT denominacion FROM categorias');
+                                $sent->execute();
+                                ?>
+                            <?php foreach ($sent as $fila) : ?>
+                                <option value="<?=obtenerID($pdo,$fila['denominacion'])?>"><?= $fila['denominacion'] ?></option>
+                            <?php endforeach ?>
+                        </select>
                     </div>
                     <!-- <div class="form-group form-check">
                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
@@ -176,14 +185,16 @@ function dibujarFormularioNoticia()
 <?php
 }
 
-function alert($mensaje, $severidad = 'success')
+function obtenerID($pdo, $denominacion)
 {
-    ?>
-    <div class="alert alert-<?=$severidad?>" role="alert">
-        <?= $mensaje ?>
-    </div>
-<?php
+    $sent = $pdo->prepare("SELECT id FROM categorias WHERE denominacion = :denominacion");
+    $sent->execute([':denominacion' => $denominacion]);
+    $id = $sent->fetchColumn();
+    return $id;
 }
+
+
+
 
 function es_GET($req = null)
 {
@@ -205,4 +216,53 @@ function peticion($req = null)
 function logueado()
 {
     return isset($_SESSION['login']) ? $_SESSION['login'] : false;
+}
+
+function aviso($mensaje, $severidad = 'success')
+{
+    $_SESSION['aviso'] = [
+        'mensaje' => $mensaje,
+        'severidad' => $severidad,
+    ];
+}
+
+function hayAvisos()
+{
+    return isset($_SESSION['aviso']);
+}
+
+function getAviso()
+{
+    return hayAvisos() ? $_SESSION['aviso'] : [];
+}
+
+function alert($mensaje = null, $severidad = null)
+{
+    if ($mensaje === null) {
+        if (hayAvisos()) {
+            $aviso = getAviso();
+            $mensaje = $aviso['mensaje'];
+            $severidad = $aviso['severidad'];
+            quitarAvisos();
+        } else {
+            return;
+        }
+    }
+    
+    ?>
+    <div class="row mt-3">
+        <div class="col-8 offset-2">
+            <div class="alert alert-<?= $severidad ?> alert-dismissible fade show" role="alert">
+                <?= $mensaje ?>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div><?php
+}
+
+function quitarAvisos()
+{
+    unset($_SESSION['aviso']);
 }

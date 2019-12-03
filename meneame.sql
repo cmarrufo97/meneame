@@ -34,6 +34,9 @@ VALUES ('Deportes')
      , ('Arte')
      , ('Cine');
 
+INSERT INTO usuarios (login,password,email)
+VALUES ('pepe','pepe','pepe@pepe.com');     
+
 
 INSERT INTO noticias (titulo,cuerpo,categoria_id)
 VALUES ('Noticia 1','Lorem ipsum dolor sit amet consectetur adipiscing elit sollicitudin nam magnis, non ultrices integer fames class venenatis himenaeos dui fringilla, eget suscipit semper rhoncus donec vitae dis mus massa. Eleifend orci non mauris vestibulum netus molestie tellus vel, litora cum maecenas cursus penatibus viverra torquent neque, imperdiet vehicula tristique mus nullam ac bibendum. Mus mauris eleifend natoque eget urna auctor taciti, facilisis molestie porttitor ullamcorper cras magna, sapien semper quam ac senectus phasellus.',5)

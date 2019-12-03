@@ -14,11 +14,17 @@
     <?php
     require __DIR__ . '/auxiliar.php';
     $pdo = conectar();
-    // if (!logueado()) {
-    //     alert('Tiene que estar logueado para publicar una noticia.', 'danger');
-    //     dibujarFormularioLogin();
-    //     return;
-    // }
+    if (hayAvisos()) {
+        alert();
+    }
+
+    if (!logueado()) {
+        // alert('Tiene que estar logueado para publicar una noticia.', 'danger');
+        aviso('Tiene que estar logueado para publicar una noticia.', 'danger');
+        header('Location: /usuarios/login.php');
+        return;
+    }
+
 
     if (es_POST()) {
         $sent = $pdo->prepare('INSERT
@@ -28,6 +34,7 @@
         $titulo = $_POST['noticia'];
         $cuerpo = $_POST['cuerpo'];
         $categoria = $_POST['categoria'];
+        var_dump($categoria);
         if (!empty($titulo) && !empty($cuerpo) && !empty($categoria)) {
             $sent->execute([':titulo' => $titulo, ':cuerpo' => $cuerpo, ':categoria_id' => $categoria]);
             alert('Noticia insertada correctamente.', 'succes');
@@ -37,7 +44,7 @@
             alert('Los campos no pueden estar vacíos.', 'danger');
         }
     }
-    dibujarFormularioNoticia();
+    dibujarFormularioNoticia($pdo);
     ?>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

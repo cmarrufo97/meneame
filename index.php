@@ -1,6 +1,7 @@
-<?php session_start()?>
+<?php session_start() ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,16 +16,14 @@
     require __DIR__ . '/auxiliar.php';
     barra();
     $pdo = conectar();
-    $sent = $pdo->query('SELECT * FROM noticias');
+    $sent = $pdo->prepare('SELECT * FROM noticias');
+    $sent->execute();
     ?>
-        <div class="container">
-            <?php 
-            proyectarNoticias($sent,$pdo);
-            ?>
-        </div>
-    <?php
-
-    ?>
+    <div class="container">
+        <?php
+        proyectarNoticias($sent, $pdo);
+        ?>
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -33,4 +32,5 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 </body>
+
 </html>
