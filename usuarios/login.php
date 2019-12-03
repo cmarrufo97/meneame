@@ -25,14 +25,21 @@
     }
 
     if (es_POST() && !empty($_POST)) {
-        if (comprobarUsuario($pdo,$_POST['login']) === false) {
-            alert('Ese usuario no existe.','danger');
-            dibujarFormularioLogin();
-            return;
+        $login = trim($_POST['login']);
+        $password = trim($_POST['password']);
+        if (!empty($login) && !empty($password)) {
+            if (comprobarUsuario($pdo,$_POST['login']) === false) {
+                alert('Ese usuario no existe.','danger');
+                dibujarFormularioLogin();
+                return;
+            }else {
+                $_SESSION['login'] = $_POST['login'];
+                header('Location: ../index.php');
+            }
         }else {
-            $_SESSION['login'] = $_POST['login'];
-            header('Location: ../index.php');
+            alert('Los campos no pueden estar vacíos.','danger');
         }
+
     }
     dibujarFormularioLogin();
     ?>
