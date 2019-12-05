@@ -24,22 +24,27 @@
         $confirmar = trim($_POST['confirmar']);
         $email = trim($_POST['email']);
 
+
         if (!empty($usuario) && !empty($contraseña) && !empty($confirmar) && !empty($email)) {
             if ($contraseña == $confirmar) {
-                // Comprobar si el usuario ya existe.
-
-                // Realizar registro
-                $sent = $pdo->prepare('INSERT INTO usuarios (login,password,email)
-                                       VALUES (:login,:password,:email)');
-                
-                $sent->execute([':login' => $usuario, ':password' => $contraseña,':email' => $email]);
-                header('Location: ../index.php');
-                return;
+                if (!existeUsuario($usuario,$pdo)) {
+                    // Realizar registro
+                    $sent = $pdo->prepare('INSERT INTO usuarios (login,password,email)
+                                           VALUES (:login,:password,:email)');
+    
+                    $sent->execute([':login' => $usuario, ':password' => $contraseña, ':email' => $email]);
+                    $_SESSION['login'] = $usuario;  // Auto login.
+                    header('Location: ../index.php');
+                    return;
+                }else {
+                    alert('El usuario ya existe.','danger');
+                }
+            }else {
+                alert('Las contraseñas no coinciden','danger');
             }
-        }else {
-            alert('Los campos no pueden estar vacíos.','danger');
+        } else {
+            alert('Los campos no pueden estar vacíos.', 'danger');
         }
-
     }
     dibujarFormularioRegistro();
     ?>

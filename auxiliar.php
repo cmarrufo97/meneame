@@ -269,7 +269,12 @@ function quitarAvisos()
     unset($_SESSION['aviso']);
 }
 
- function existeUsuario($pdo) {
-     // Comprobar si un usuario existe en la base de datos.
-     
- }
+function existeUsuario($usuario,$pdo) {
+        // Comprobar si un usuario existe en la base de datos.
+    $sent = $pdo->prepare("SELECT login FROM usuarios WHERE login = :usuario");
+    $sent->execute([':usuario' => $usuario]);
+
+    $existe = $sent->fetchColumn();
+
+    return $existe;
+}
