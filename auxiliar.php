@@ -74,18 +74,18 @@ function dibujarFormularioRegistro()
     <div id="form-login" class="container">
         <div class="row justify-content-center mt-5">
             <div class="col-4">
-                <form action="">
+                <form action="" method="POST">
                     <div class="form-group">
-                        <label for="nombreUsuario">Nombre de usuario</label>
-                        <input type="text" class="form-control" name="user" id="nombreUsuario" placeholder="Introduce nombre de usuario">
+                        <label for="usuario">Nombre de usuario</label>
+                        <input type="text" class="form-control" name="usuario" id="usuario" placeholder="Introduce nombre de usuario">
                     </div>
                     <div class="form-group">
                         <label for="contraseña">Contraseña</label>
-                        <input type="password" class="form-control" name="password" id="contraseña" placeholder="Introduce tu contraseña">
+                        <input type="password" class="form-control" name="contraseña" id="contraseña" placeholder="Introduce tu contraseña">
                     </div>
                     <div class="form-group">
                         <label for="confirmar">Confirmar contraseña</label>
-                        <input type="password" class="form-control" id="confirmar" name="password_confirm" placeholder="Introduce de nuevo la contraseña">
+                        <input type="password" class="form-control" id="confirmar" name="confirmar" placeholder="Introduce de nuevo la contraseña">
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
@@ -136,8 +136,10 @@ function getCategoria($pdo, $titulo)
 {
     // consulta : SELECT denominacion FROM categorias WHERE id in (SELECT categoria_id FROM noticias);
 
-    $sent = $pdo->query("SELECT denominacion FROM categorias NATURAL JOIN noticias WHERE id IN  
+    $sent = $pdo->prepare("SELECT denominacion FROM categorias NATURAL JOIN noticias WHERE id IN  
     (SELECT categoria_id FROM noticias WHERE titulo = '$titulo')");
+
+    $sent->execute();
 
     $categoria = $sent->fetchColumn();
     return $categoria;
@@ -266,3 +268,8 @@ function quitarAvisos()
 {
     unset($_SESSION['aviso']);
 }
+
+ function existeUsuario($pdo) {
+     // Comprobar si un usuario existe en la base de datos.
+     
+ }

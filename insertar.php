@@ -34,7 +34,6 @@
         $titulo = $_POST['noticia'];
         $cuerpo = $_POST['cuerpo'];
         $categoria = $_POST['categoria'];
-        var_dump($categoria);
         if (!empty($titulo) && !empty($cuerpo) && !empty($categoria)) {
             $sent->execute([':titulo' => $titulo, ':cuerpo' => $cuerpo, ':categoria_id' => $categoria]);
             alert('Noticia insertada correctamente.', 'succes');
