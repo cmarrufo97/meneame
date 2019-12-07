@@ -1,5 +1,15 @@
 <?php
 
+function param($par)
+{
+    if (isset($_POST)) {
+        if (isset($_POST[$par])) {
+            return trim($_POST[$par]);
+        }
+    }
+    return '';
+}
+
 function barra()
 {
     ?>
@@ -48,7 +58,7 @@ function dibujarFormularioLogin()
                 <form action="" method="POST">
                     <div class="form-group">
                         <label for="usuario">Usuario</label>
-                        <input type="text" class="form-control" id="usuario" name="login" placeholder="Introduce nombre de usuario">
+                        <input type="text" class="form-control" id="usuario" name="login" placeholder="Introduce nombre de usuario" value="<?= param('login') ?>">
                     </div>
                     <div class="form-group">
                         <label for="contraseña">Contraseña</label>
@@ -77,7 +87,7 @@ function dibujarFormularioRegistro()
                 <form action="" method="POST">
                     <div class="form-group">
                         <label for="usuario">Nombre de usuario</label>
-                        <input type="text" class="form-control" name="usuario" id="usuario" placeholder="Introduce nombre de usuario">
+                        <input type="text" class="form-control" name="usuario" id="usuario" placeholder="Introduce nombre de usuario" value="<?= param('usuario') ?>">
                     </div>
                     <div class="form-group">
                         <label for="contraseña">Contraseña</label>
@@ -89,7 +99,7 @@ function dibujarFormularioRegistro()
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" class="form-control" name="email" id="email" placeholder="Introduce tu email">
+                        <input type="email" class="form-control" name="email" id="email" placeholder="Introduce tu email" value="<?= param('email') ?>">
                     </div>
                     <!-- <div class="form-group form-check">
                         <input type="checkbox" class="form-check-input" id="exampleCheck1">
@@ -170,7 +180,7 @@ function dibujarFormularioNoticia($pdo)
                                 $sent->execute();
                                 ?>
                             <?php foreach ($sent as $fila) : ?>
-                                <option value="<?=obtenerID($pdo,$fila['denominacion'])?>"><?= $fila['denominacion'] ?></option>
+                                <option value="<?= obtenerID($pdo, $fila['denominacion']) ?>"><?= $fila['denominacion'] ?></option>
                             <?php endforeach ?>
                         </select>
                     </div>
@@ -250,7 +260,7 @@ function alert($mensaje = null, $severidad = null)
             return;
         }
     }
-    
+
     ?>
     <div class="row mt-3">
         <div class="col-8 offset-2">
@@ -262,19 +272,20 @@ function alert($mensaje = null, $severidad = null)
             </div>
         </div>
     </div><?php
-}
+            }
 
-function quitarAvisos()
-{
-    unset($_SESSION['aviso']);
-}
+            function quitarAvisos()
+            {
+                unset($_SESSION['aviso']);
+            }
 
-function existeUsuario($usuario,$pdo) {
-        // Comprobar si un usuario existe en la base de datos.
-    $sent = $pdo->prepare("SELECT login FROM usuarios WHERE login = :usuario");
-    $sent->execute([':usuario' => $usuario]);
+            function existeUsuario($usuario, $pdo)
+            {
+                // Comprobar si un usuario existe en la base de datos.
+                $sent = $pdo->prepare("SELECT login FROM usuarios WHERE login = :usuario");
+                $sent->execute([':usuario' => $usuario]);
 
-    $existe = $sent->fetchColumn();
+                $existe = $sent->fetchColumn();
 
-    return $existe;
-}
+                return $existe;
+            }

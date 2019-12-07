@@ -28,18 +28,20 @@
         $login = trim($_POST['login']);
         $password = trim($_POST['password']);
         if (!empty($login) && !empty($password)) {
-            if (comprobarUsuario($pdo,$_POST['login']) === false) {
-                alert('Ese usuario no existe.','danger');
-                dibujarFormularioLogin();
-                return;
-            }else {
-                $_SESSION['login'] = $_POST['login'];
-                header('Location: ../index.php');
+            if (comprobarUsuario($pdo, $_POST['login']) === false) {
+                alert('Login o contraseña incorrecto', 'danger');
+            } else {
+                if (comprobarContraseña($pdo, $password, $login)) {
+                    $_SESSION['login'] = $_POST['login'];
+                    header('Location: ../index.php');
+                    return;
+                } else {
+                    alert('Login o contraseña incorrecto', 'danger');
+                }
             }
-        }else {
-            alert('Los campos no pueden estar vacíos.','danger');
+        } else {
+            alert('Los campos no pueden estar vacíos.', 'danger');
         }
-
     }
     dibujarFormularioLogin();
     ?>
