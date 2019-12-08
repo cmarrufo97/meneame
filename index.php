@@ -18,12 +18,26 @@
     $pdo = conectar();
     $sent = $pdo->prepare('SELECT * FROM noticias');
     $sent->execute();
+
+    if (es_POST() && isset($_POST['id'])) {
+        // comprobar que se esta logueado y que la noticia es del usuario para poder borrarla.
+        if (logueado()) {
+            $id = trim($_POST['id']);
+            borrarNoticia($pdo, $id);
+        }else {
+            alert('Tiene que estar logueado para borrar noticias.','danger');
+        }
+    }
     ?>
+
+
     <div class="container">
         <?php
         proyectarNoticias($sent, $pdo);
         ?>
     </div>
+
+
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

@@ -129,17 +129,52 @@ function proyectarNoticias($sent, $pdo)
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
                         <h4 class="card-title"><?= $fila['titulo'] ?></h4>
-                        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">por<a id="autor" href="#"><?= getAutorNoticia($pdo, $fila['usuario_id'], $fila['id']) ?></a></h6>
                         <p class="card-text"><?= $fila['cuerpo'] ?></p>
                         <p class="categoria"><?= getCategoria($pdo, $fila['titulo']) ?></p>
                         <!-- <a href="#" class="card-link">Card link</a>
                         <a href="#" class="card-link">Another link</a> -->
+                        <?php
+                                if (logueado()) {
+                                    if (trim($_SESSION['login'] == getAutorNoticia($pdo, $fila['usuario_id'], $fila['id']))) {
+                                        // el usuario puede borrar sus noticias.
+                                        ?>
+                                <form action="" method="POST">
+                                    <input type="hidden" name="id" value="<?= $fila['id'] ?>">
+                                    <button type="submit" class="btn btn-sm btn-danger float-right">Borrar</button>
+                                </form>
+                        <?php
+                                    }
+                                }
+                                ?>
                     </div>
                 </div>
             </div>
         </div>
     <?php endforeach ?>
 <?php
+}
+
+function borrarNoticia($pdo, $id)
+{
+    $sent = $pdo->prepare("DELETE FROM noticias WHERE id = :id");
+    $sent->execute([':id' => $id]);
+
+    if ($sent->rowCount() === 1) {
+        aviso('Fila borrada correctamente');
+        header('Location: index.php');
+    } else {
+        alert('Ha ocurrido un error inesperado.', 'danger');
+    }
+}
+
+function getAutorNoticia($pdo, $usuario_id, $noticia_id)
+{
+    // $sent = $pdo->query("SELECT login FROM usuarios WHERE id IN (SELECT $usuario_id FROM noticias WHERE id = $noticia_id)");
+    $sent = $pdo->prepare("SELECT login FROM usuarios WHERE id IN (SELECT $usuario_id FROM noticias WHERE id = '$noticia_id')");
+    $sent->execute();
+    $autor = $sent->fetchColumn();
+    return $autor;
 }
 
 function getCategoria($pdo, $titulo)
@@ -205,8 +240,25 @@ function obtenerID($pdo, $denominacion)
     return $id;
 }
 
+function obtener_id_usuario($pdo,$usuario)
+{ 
+    $sent = $pdo->prepare("SELECT id FROM usuarios WHERE login = :usuario");
+    $sent->execute([':usuario' => $usuario]);
 
+    $id = $sent->fetchColumn();
 
+    return $id;
+}
+
+function es_Autor($pdo, $autor, $titulo)
+{
+    $sent = $pdo->prepare("SELECT :login FROM usuarios WHERE id IN (SELECT usuario_id FROM noticias WHERE titulo = '$titulo');");
+    $sent->execute([':login' => $autor]);
+
+    $autor = $sent->fetchColumn();
+
+    return $autor;
+}
 
 function es_GET($req = null)
 {

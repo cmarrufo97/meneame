@@ -53,4 +53,13 @@
    color: #df5517; 
 }
 
+#autor  {
+    color: #df5517;
+    border-radius: 6px;
+    display: inline-block;
+    width: 3.2em;
+    height: 1.2em;
+    text-align: center;
+}
+
 
