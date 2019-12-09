@@ -62,4 +62,24 @@
     text-align: center;
 }
 
+#boton-buscar {
+    background-color: transparent;
+    border: none;
+    margin-top: 4px;
+}
+
+input[type=search] {
+    border-radius: 6px;
+    border: none;
+}
+
+#usuario {
+    margin-top: 4px;
+}
+
+.vl {
+    border-left: 1px solid lightgray;
+    padding-right: 10px;
+}
+
 

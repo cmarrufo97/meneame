@@ -24,8 +24,8 @@
         if (logueado()) {
             $id = trim($_POST['id']);
             borrarNoticia($pdo, $id);
-        }else {
-            alert('Tiene que estar logueado para borrar noticias.','danger');
+        } else {
+            alert('Tiene que estar logueado para borrar noticias.', 'danger');
         }
     }
     ?>
@@ -33,7 +33,15 @@
 
     <div class="container">
         <?php
-        proyectarNoticias($sent, $pdo);
+
+        if (isset($_GET) && !empty($_GET)) {
+            if (isset($_GET['buscar'])) {
+                $buscar = trim($_GET['buscar']);
+                filtrarNoticias($pdo,$buscar);
+            }
+         }else {
+             proyectarNoticias($sent, $pdo);
+         }
         ?>
     </div>
 

@@ -20,8 +20,15 @@ function barra()
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
+                <li class="nav-link">
+                    <form class="form-inline my-2 my-lg-0" method="get">
+                        <input type="search" name="buscar" id="buscar">
+                        <button id="boton-buscar" type="submit"><img src="../iconos/buscar.png" alt="buscar"></button>
+                    </form>
+                </li>
+                <span class="vl"></span>
                 <?php if (logueado()) : ?>
-                    <span class="navbar-text text-white mr-2">
+                    <span id="usuario" class="navbar-text text-white mr-2">
                         <?= logueado() ?>
                     </span>
                     <form class="form-inline my-2 my-lg-0" action="/usuarios/logout.php" method="post">
@@ -122,7 +129,7 @@ function conectar()
 
 function proyectarNoticias($sent, $pdo)
 {
-    ?>
+?>
     <?php foreach ($sent as $fila) : ?>
         <div class="row mt-5">
             <div class="col mt-5">
@@ -152,7 +159,72 @@ function proyectarNoticias($sent, $pdo)
             </div>
         </div>
     <?php endforeach ?>
+    <?php
+}
+
+function filtrarNoticias($pdo, $valor)
+{
+    // if (trim($valor) == existeUsuario($valor,$pdo)) {
+    //     $res = obtener_id_usuario($pdo,$valor);
+    //     $sent = $pdo->prepare("SELECT * FROM noticias WHERE usuario_id = '$res'");
+    //     $sent->execute();
+    // }else {
+    //     $sent = $pdo->prepare("SELECT * FROM noticias WHERE titulo ILIKE '%$valor%'");
+    //     $sent->execute();
+    // }
+    $valor = trim($valor);
+
+    switch($valor) {
+        case $valor == existeUsuario($valor,$pdo):
+            $res = obtener_id_usuario($pdo,$valor);
+            $sent = $pdo->prepare("SELECT * FROM noticias WHERE usuario_id = '$res'");
+            $sent->execute();
+        break;
+        
+        case $valor == existe_categoria($pdo,$valor):
+            $res = obtenerID($pdo,$valor);
+            $sent = $pdo->prepare("SELECT * FROM noticias WHERE categoria_id = '$res'");
+            $sent->execute();
+        break;
+
+        default :
+            $sent = $pdo->prepare("SELECT * FROM noticias WHERE titulo ILIKE '%$valor%'");
+            $sent->execute();
+
+    }
+
+
+    foreach ($sent as $fila) {
+        ?>
+    <div class="row mt-5">
+        <div class="col mt-5">
+            <div class="card" style="width: 100%;">
+                <div class="card-body">
+                    <h4 class="card-title"><?= $fila['titulo'] ?></h4>
+                    <h6 class="card-subtitle mb-2 text-muted">por<a id="autor" href="#"><?= getAutorNoticia($pdo, $fila['usuario_id'], $fila['id']) ?></a></h6>
+                    <p class="card-text"><?= $fila['cuerpo'] ?></p>
+                    <p class="categoria"><?= getCategoria($pdo, $fila['titulo']) ?></p>
+                    <!-- <a href="#" class="card-link">Card link</a>
+                    <a href="#" class="card-link">Another link</a> -->
+                    <?php
+                            if (logueado()) {
+                                if (trim($_SESSION['login'] == getAutorNoticia($pdo, $fila['usuario_id'], $fila['id']))) {
+                                    // el usuario puede borrar sus noticias.
+                                    ?>
+                            <form action="" method="POST">
+                                <input type="hidden" name="id" value="<?= $fila['id'] ?>">
+                                <button type="submit" class="btn btn-sm btn-danger float-right">Borrar</button>
+                            </form>
+                    <?php
+                                }
+                            }
+                            ?>
+                </div>
+            </div>
+        </div>
+    </div>
 <?php
+    }
 }
 
 function borrarNoticia($pdo, $id)
@@ -182,7 +254,7 @@ function getCategoria($pdo, $titulo)
     // consulta : SELECT denominacion FROM categorias WHERE id in (SELECT categoria_id FROM noticias);
 
     $sent = $pdo->prepare("SELECT denominacion FROM categorias NATURAL JOIN noticias WHERE id IN  
-    (SELECT categoria_id FROM noticias WHERE titulo = '$titulo')");
+                            (SELECT categoria_id FROM noticias WHERE titulo = '$titulo')");
 
     $sent->execute();
 
@@ -193,7 +265,7 @@ function getCategoria($pdo, $titulo)
 function dibujarFormularioNoticia($pdo)
 {
     ?>
-    <div id="form-login" class="container">
+        <div id="form-login" class="container">
         <div class="row justify-content-center mt-4">
             <div class="col-5">
                 <form action="" method="post">
@@ -228,8 +300,8 @@ function dibujarFormularioNoticia($pdo)
                 </form>
             </div>
         </div>
-    </div>
-<?php
+        </div>
+    <?php
 }
 
 function obtenerID($pdo, $denominacion)
@@ -240,14 +312,22 @@ function obtenerID($pdo, $denominacion)
     return $id;
 }
 
-function obtener_id_usuario($pdo,$usuario)
-{ 
+function obtener_id_usuario($pdo, $usuario)
+{
     $sent = $pdo->prepare("SELECT id FROM usuarios WHERE login = :usuario");
     $sent->execute([':usuario' => $usuario]);
 
     $id = $sent->fetchColumn();
 
     return $id;
+}
+
+function existe_categoria($pdo,$categoria) {
+    $sent = $pdo->prepare("SELECT denominacion FROM categorias WHERE denominacion = :categoria");
+    $sent->execute([':categoria' => $categoria]);
+
+    $res = $sent->fetchColumn();
+    return $res;
 }
 
 function es_Autor($pdo, $autor, $titulo)
@@ -313,31 +393,32 @@ function alert($mensaje = null, $severidad = null)
         }
     }
 
-    ?>
+?>
     <div class="row mt-3">
         <div class="col-8 offset-2">
             <div class="alert alert-<?= $severidad ?> alert-dismissible fade show" role="alert">
                 <?= $mensaje ?>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
             </div>
         </div>
-    </div><?php
-            }
+    </div>
+<?php
+}
 
-            function quitarAvisos()
-            {
-                unset($_SESSION['aviso']);
-            }
+function quitarAvisos()
+{
+    unset($_SESSION['aviso']);
+}
 
-            function existeUsuario($usuario, $pdo)
-            {
-                // Comprobar si un usuario existe en la base de datos.
-                $sent = $pdo->prepare("SELECT login FROM usuarios WHERE login = :usuario");
-                $sent->execute([':usuario' => $usuario]);
+function existeUsuario($usuario, $pdo)
+{
+    // Comprobar si un usuario existe en la base de datos.
+    $sent = $pdo->prepare("SELECT login FROM usuarios WHERE login = :usuario");
+    $sent->execute([':usuario' => $usuario]);
 
-                $existe = $sent->fetchColumn();
+    $existe = $sent->fetchColumn();
 
-                return $existe;
-            }
+    return $existe;
+}
