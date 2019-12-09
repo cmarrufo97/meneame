@@ -148,7 +148,10 @@ function proyectarNoticias($sent, $pdo)
                                         ?>
                                 <form action="" method="POST">
                                     <input type="hidden" name="id" value="<?= $fila['id'] ?>">
-                                    <button type="submit" class="btn btn-sm btn-danger float-right">Borrar</button>
+                                    <a href="modificar.php?id=<?=$fila['id']?>" class="btn btn-sm btn-info float-right" role="button">
+                                            Modificar
+                                    </a>
+                                    <button id="boton-borrar" type="submit" class="btn btn-sm btn-danger float-right">Borrar</button>
                                 </form>
                         <?php
                                     }
@@ -262,7 +265,7 @@ function getCategoria($pdo, $titulo)
     return $categoria;
 }
 
-function dibujarFormularioNoticia($pdo)
+function dibujarFormularioNoticia($pdo,$accion = 'Publicar')
 {
     ?>
         <div id="form-login" class="container">
@@ -295,8 +298,19 @@ function dibujarFormularioNoticia($pdo)
                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
                     <label class="form-check-label" for="exampleCheck1">Check me out</label>
                 </div> -->
-                    <button type="submit" class="btn btn-success">Publicar</button>
+                <?php 
+                    if (trim($accion) == 'Modificar') {
+                    ?>
+                    <button type="submit" class="btn btn-success">Modificar</button>
                     <a href="index.php" class="btn btn-info" role="button">Volver</a>
+                    <?php    
+                    }else {
+                        ?>
+                        <button type="submit" class="btn btn-success">Publicar</button>
+                        <a href="index.php" class="btn btn-info" role="button">Volver</a>
+                        <?php
+                    }
+                ?>
                 </form>
             </div>
         </div>

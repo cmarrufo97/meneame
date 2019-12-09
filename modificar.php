@@ -6,47 +6,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Añadir una Noticia</title>
+    <title>Modificar noticia</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/estilo.css">
 </head>
 
 <body>
     <?php
     require __DIR__ . '/auxiliar.php';
+    barra();
+
     $pdo = conectar();
-
-
+    // comprobar que se esta logueado y que la noticia es del usuario para poder borrarla.
     if (!logueado()) {
-        aviso('Tiene que estar logueado para publicar una noticia.', 'danger');
-        header('Location: /usuarios/login.php');
+        aviso('Tiene que estar logueado para modificar noticias.', 'danger');
+        header('Location: index.php');
         return;
     }
 
-    if (hayAvisos()) {
-        alert();
+    if (isset($_GET) && !empty($_GET)) {
+        if (isset($_GET['id'])) {
+            $id = trim($_GET['id']);
+            unset($_GET['id']);
+        }
+    }else {
+        // si llega aqui es que se ha accedido al modificar sin el paramtro id.
+        aviso('Ha ocurrido un error inesperado.','danger');
+        header('Location: index.php');
+        return;
     }
 
-
-    if (es_POST()) {
-        $sent = $pdo->prepare('INSERT
-                                 INTO noticias (titulo,cuerpo,usuario_id,categoria_id)
-                               VALUES (:titulo,:cuerpo,:usuario_id,:categoria_id)');
-        // Esto de abajo está fatal.
-        $titulo = $_POST['noticia'];
-        $cuerpo = $_POST['cuerpo'];
+    if (isset($_POST) && !empty($_POST)) {
+        $titulo = trim($_POST['noticia']);
+        $cuerpo = trim($_POST['cuerpo']);
         $autor = obtener_id_usuario($pdo, trim($_SESSION['login']));
-        $categoria = $_POST['categoria'];
-        if (!empty($titulo) && !empty($cuerpo) && !empty($categoria)) {
-            $sent->execute([':titulo' => $titulo, ':cuerpo' => $cuerpo, ':usuario_id' => $autor, ':categoria_id' => $categoria]);
-            alert('Noticia insertada correctamente.', 'succes');
+        $categoria = trim($_POST['categoria']);
+        if (logueado()) {
+            // usuario puede modificar la noticia.
+            $sent = $pdo->prepare("UPDATE noticias SET titulo = :titulo, cuerpo = :cuerpo, usuario_id = :autor, categoria_id = :categoria WHERE id = :id");
+            $sent->execute([':titulo' => $titulo, ':cuerpo' => $cuerpo, ':autor' => $autor, ':categoria' => $categoria, ':id' => $id]);
+            aviso('Noticia modificada correctamente');
             header('Location: index.php');
             return;
         } else {
-            alert('Los campos no pueden estar vacíos.', 'danger');
+            alert('Tiene que estar logueado para borrar noticias.', 'danger');
         }
     }
-    dibujarFormularioNoticia($pdo);
+
+
+
     ?>
+
+    <?= dibujarFormularioNoticia($pdo, 'Modificar') ?>
+
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

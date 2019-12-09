@@ -68,6 +68,10 @@
     margin-top: 4px;
 }
 
+#boton-borrar {
+    margin-right: 3px;
+}
+
 input[type=search] {
     border-radius: 6px;
     border: none;

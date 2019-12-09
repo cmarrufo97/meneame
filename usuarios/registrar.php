@@ -16,6 +16,10 @@
     require __DIR__ . '/../auxiliar.php';
     barra();
 
+    if (hayAvisos()) {
+        alert();
+    }
+
     $pdo = conectar();
 
     if (isset($_POST) && !empty($_POST)) {
@@ -27,20 +31,20 @@
 
         if (!empty($usuario) && !empty($contraseña) && !empty($confirmar) && !empty($email)) {
             if ($contraseña == $confirmar) {
-                if (!existeUsuario($usuario,$pdo)) {
+                if (!existeUsuario($usuario, $pdo)) {
                     // Realizar registro
                     $sent = $pdo->prepare('INSERT INTO usuarios (login,password,email)
                                            VALUES (:login,:password,:email)');
-    
+
                     $sent->execute([':login' => $usuario, ':password' => $contraseña, ':email' => $email]);
                     $_SESSION['login'] = $usuario;  // Auto login.
                     header('Location: ../index.php');
                     return;
-                }else {
-                    alert('El usuario ya existe.','danger');
+                } else {
+                    alert('El usuario ya existe.', 'danger');
                 }
-            }else {
-                alert('Las contraseñas no coinciden','danger');
+            } else {
+                alert('Las contraseñas no coinciden', 'danger');
             }
         } else {
             alert('Los campos no pueden estar vacíos.', 'danger');

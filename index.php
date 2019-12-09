@@ -34,6 +34,11 @@
     <div class="container">
         <?php
 
+        if (hayAvisos()) {
+            alert();
+        }
+
+
         if (isset($_GET) && !empty($_GET)) {
             if (isset($_GET['buscar'])) {
                 $buscar = trim($_GET['buscar']);
