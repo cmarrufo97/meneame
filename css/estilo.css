@@ -56,9 +56,9 @@
 #autor  {
     color: #df5517;
     border-radius: 6px;
-    display: inline-block;
-    width: 3.2em;
-    height: 1.2em;
+    padding-left: 5px;
+    /* width: 3.5em;
+    height: 12em; */
     text-align: center;
 }
 

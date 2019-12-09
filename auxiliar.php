@@ -271,7 +271,7 @@ function dibujarFormularioNoticia($pdo)
                 <form action="" method="post">
                     <div class="form-group">
                         <label for="noticia">Titulo de la noticia</label>
-                        <input type="text" class="form-control" id="noticia" name="noticia" placeholder="Introduce el titulo de la noticia">
+                        <input type="text" class="form-control" id="noticia" name="noticia" placeholder="Introduce el titulo de la noticia" value="<?=param('noticia')?>">
                     </div>
                     <div class="form-group">
                         <label for="cuerpo">Cuerpo de la noticia</label>

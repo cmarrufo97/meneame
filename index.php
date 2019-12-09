@@ -37,11 +37,11 @@
         if (isset($_GET) && !empty($_GET)) {
             if (isset($_GET['buscar'])) {
                 $buscar = trim($_GET['buscar']);
-                filtrarNoticias($pdo,$buscar);
+                filtrarNoticias($pdo, $buscar);
             }
-         }else {
-             proyectarNoticias($sent, $pdo);
-         }
+        } else {
+            proyectarNoticias($sent, $pdo);
+        }
         ?>
     </div>
 
