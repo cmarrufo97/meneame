@@ -42,7 +42,7 @@
         $categoria = h(trim($_POST['categoria']));
         if (!empty($titulo) && !empty($cuerpo) && !empty($categoria)) {
             $sent->execute([':titulo' => $titulo, ':cuerpo' => $cuerpo, ':usuario_id' => $autor, ':categoria_id' => $categoria]);
-            alert('Noticia insertada correctamente.', 'succes');
+            aviso('Noticia insertada correctamente.');
             header('Location: index.php');
             return;
         } else {
