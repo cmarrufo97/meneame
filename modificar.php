@@ -29,9 +29,9 @@
             $id = trim($_GET['id']);
             unset($_GET['id']);
         }
-    }else {
+    } else {
         // si llega aqui es que se ha accedido al modificar sin el paramtro id.
-        aviso('Ha ocurrido un error inesperado.','danger');
+        aviso('Ha ocurrido un error inesperado.', 'danger');
         header('Location: index.php');
         return;
     }
@@ -41,15 +41,31 @@
         $cuerpo = trim($_POST['cuerpo']);
         $autor = obtener_id_usuario($pdo, trim($_SESSION['login']));
         $categoria = trim($_POST['categoria']);
-        if (logueado()) {
-            // usuario puede modificar la noticia.
-            $sent = $pdo->prepare("UPDATE noticias SET titulo = :titulo, cuerpo = :cuerpo, usuario_id = :autor, categoria_id = :categoria WHERE id = :id");
-            $sent->execute([':titulo' => $titulo, ':cuerpo' => $cuerpo, ':autor' => $autor, ':categoria' => $categoria, ':id' => $id]);
-            aviso('Noticia modificada correctamente');
+        $sent = $pdo->prepare("SELECT login from usuarios where id IN (SELECT usuario_id FROM noticias WHERE id = $id)");
+        $sent->execute();
+
+        // Comprobar que la noticia pertenece al usuario.
+        $login = trim($_SESSION['login']);
+        $res = "" . $sent->fetchColumn();
+
+        $correcto = ($login === $res);
+
+        if ($correcto === true) {
+            if (!empty($titulo) && !empty($cuerpo) && !empty($categoria)) {
+                // se modifica si la noticia pertenece al usuario.
+                // usuario puede modificar la noticia.
+                $sent = $pdo->prepare("UPDATE noticias SET titulo = :titulo, cuerpo = :cuerpo, usuario_id = :autor, categoria_id = :categoria WHERE id = :id");
+                $sent->execute([':titulo' => $titulo, ':cuerpo' => $cuerpo, ':autor' => $autor, ':categoria' => $categoria, ':id' => $id]);
+                aviso('Noticia modificada correctamente');
+                header('Location: index.php');
+                return;
+            } else {
+                alert('Los campos no pueden estar vacíos.', 'danger');
+            }
+        } else {
+            aviso('Ha ocurrido un error inesperado', 'danger');
             header('Location: index.php');
             return;
-        } else {
-            alert('Tiene que estar logueado para borrar noticias.', 'danger');
         }
     }
 
