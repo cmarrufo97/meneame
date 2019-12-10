@@ -30,7 +30,7 @@
 
     if (isset($_GET) && !empty($_GET)) {
         if (isset($_GET['id'])) {
-            $id = trim($_GET['id']);
+            $id = h(trim($_GET['id']));
             unset($_GET['id']);
         }
     } else {
@@ -41,15 +41,15 @@
     }
 
     if (isset($_POST) && !empty($_POST)) {
-        $titulo = trim($_POST['noticia']);
-        $cuerpo = trim($_POST['cuerpo']);
-        $autor = obtener_id_usuario($pdo, trim($_SESSION['login']));
-        $categoria = trim($_POST['categoria']);
+        $titulo = h(trim($_POST['noticia']));
+        $cuerpo = h(trim($_POST['cuerpo']));
+        $autor = obtener_id_usuario($pdo, h(trim($_SESSION['login'])));
+        $categoria = h(trim($_POST['categoria']));
         $sent = $pdo->prepare("SELECT login from usuarios where id IN (SELECT usuario_id FROM noticias WHERE id = $id)");
         $sent->execute();
 
         // Comprobar que la noticia pertenece al usuario.
-        $login = trim($_SESSION['login']);
+        $login = h(trim($_SESSION['login']));
         $res = "" . $sent->fetchColumn();
 
         $correcto = ($login === $res);

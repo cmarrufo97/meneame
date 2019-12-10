@@ -405,3 +405,8 @@ function existeUsuario($usuario, $pdo)
 
     return $existe;
 }
+
+function h($cadena)
+{
+    return htmlspecialchars($cadena, ENT_QUOTES | ENT_SUBSTITUTE);
+}

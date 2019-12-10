@@ -36,10 +36,10 @@
                                  INTO noticias (titulo,cuerpo,usuario_id,categoria_id)
                                VALUES (:titulo,:cuerpo,:usuario_id,:categoria_id)');
         // Esto de abajo está fatal.
-        $titulo = $_POST['noticia'];
-        $cuerpo = $_POST['cuerpo'];
-        $autor = obtener_id_usuario($pdo, trim($_SESSION['login']));
-        $categoria = $_POST['categoria'];
+        $titulo = h(trim($_POST['noticia'])) ;
+        $cuerpo = h(trim($_POST['cuerpo'])) ;
+        $autor = obtener_id_usuario($pdo, h(trim($_SESSION['login'])));
+        $categoria = h(trim($_POST['categoria']));
         if (!empty($titulo) && !empty($cuerpo) && !empty($categoria)) {
             $sent->execute([':titulo' => $titulo, ':cuerpo' => $cuerpo, ':usuario_id' => $autor, ':categoria_id' => $categoria]);
             alert('Noticia insertada correctamente.', 'succes');

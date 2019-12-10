@@ -27,7 +27,7 @@
     if (es_POST() && isset($_POST['id'])) {
         // comprobar que se esta logueado y que la noticia es del usuario para poder borrarla.
         if (logueado()) {
-            $id = trim($_POST['id']);
+            $id = h(trim($_POST['id']));
             borrarNoticia($pdo, $id);
         } else {
             alert('Tiene que estar logueado para borrar noticias.', 'danger');
@@ -46,7 +46,7 @@
 
         if (isset($_GET) && !empty($_GET)) {
             if (isset($_GET['buscar'])) {
-                $buscar = trim($_GET['buscar']);
+                $buscar = h(trim($_GET['buscar']));
                 filtrarNoticias($pdo, $buscar);
             }
         } else {
