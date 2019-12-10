@@ -305,8 +305,9 @@ function obtener_id_usuario($pdo, $usuario)
     return $id;
 }
 
-function existe_categoria($pdo,$categoria) {
+function existe_categoria($pdo,&$categoria) {
     $sent = $pdo->prepare("SELECT denominacion FROM categorias WHERE denominacion = :categoria");
+    $categoria = ucfirst(mb_strtolower($categoria));    // Se formatea al formato que tiene en la DB.
     $sent->execute([':categoria' => $categoria]);
 
     $res = $sent->fetchColumn();
@@ -395,10 +396,11 @@ function quitarAvisos()
     unset($_SESSION['aviso']);
 }
 
-function existeUsuario($usuario, $pdo)
+function existeUsuario(&$usuario, $pdo)
 {
     // Comprobar si un usuario existe en la base de datos.
     $sent = $pdo->prepare("SELECT login FROM usuarios WHERE login = :usuario");
+    $usuario = mb_strtolower($usuario);    // Se formatea al formato que tiene en la DB.
     $sent->execute([':usuario' => $usuario]);
 
     $existe = $sent->fetchColumn();
