@@ -15,6 +15,10 @@
     require __DIR__ . '/auxiliar.php';
     $pdo = conectar();
 
+    if (!isset($_COOKIE['aceptar'])) {
+        alert('Este sitio web usa cookies. <a href="/cookies.php">Estoy de acuerdo</a>','info');
+    }
+
 
     if (!logueado()) {
         aviso('Tiene que estar logueado para publicar una noticia.', 'danger');

@@ -16,6 +16,10 @@
     require __DIR__ . '/auxiliar.php';
     barra();
 
+    if (!isset($_COOKIE['aceptar'])) {
+        alert('Este sitio web usa cookies. <a href="/cookies.php">Estoy de acuerdo</a>','info');
+    }
+
     $pdo = conectar();
     // comprobar que se esta logueado y que la noticia es del usuario para poder borrarla.
     if (!logueado()) {

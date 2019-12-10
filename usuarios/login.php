@@ -18,6 +18,10 @@
 
     barra();
 
+    if (!isset($_COOKIE['aceptar'])) {
+        alert('Este sitio web usa cookies. <a href="/cookies.php">Estoy de acuerdo</a>','info');
+    }
+
     $pdo = conectar();
 
     if (hayAvisos()) {
