@@ -196,38 +196,7 @@ function filtrarNoticias($pdo, $valor)
 
     }
 
-
-    foreach ($sent as $fila) {
-        ?>
-    <div class="row mt-5">
-        <div class="col mt-5">
-            <div class="card" style="width: 100%;">
-                <div class="card-body">
-                    <h4 class="card-title"><?= $fila['titulo'] ?></h4>
-                    <h6 class="card-subtitle mb-2 text-muted">por<a id="autor" href="#"><?= getAutorNoticia($pdo, $fila['usuario_id'], $fila['id']) ?></a></h6>
-                    <p class="card-text"><?= $fila['cuerpo'] ?></p>
-                    <p class="categoria"><?= getCategoria($pdo, $fila['titulo']) ?></p>
-                    <!-- <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a> -->
-                    <?php
-                            if (logueado()) {
-                                if (trim($_SESSION['login'] == getAutorNoticia($pdo, $fila['usuario_id'], $fila['id']))) {
-                                    // el usuario puede borrar sus noticias.
-                                    ?>
-                            <form action="" method="POST">
-                                <input type="hidden" name="id" value="<?= $fila['id'] ?>">
-                                <button type="submit" class="btn btn-sm btn-danger float-right">Borrar</button>
-                            </form>
-                    <?php
-                                }
-                            }
-                            ?>
-                </div>
-            </div>
-        </div>
-    </div>
-<?php
-    }
+    proyectarNoticias($sent,$pdo);
 }
 
 function borrarNoticia($pdo, $id)
