@@ -16,8 +16,12 @@
     require __DIR__ . '/auxiliar.php';
     barra();
 
+    if (hayAvisos()) {
+        alert();
+    }
+
     if (!isset($_COOKIE['aceptar'])) {
-        alert('Este sitio web usa cookies. <a href="/cookies.php">Estoy de acuerdo</a>','info');
+        alert('Este sitio web usa cookies. <a href="/cookies.php">Estoy de acuerdo</a>', 'info');
     }
 
     $pdo = conectar();
@@ -38,11 +42,6 @@
 
     <div class="container">
         <?php
-
-        if (hayAvisos()) {
-            alert();
-        }
-
 
         if (isset($_GET) && !empty($_GET)) {
             if (isset($_GET['buscar'])) {
