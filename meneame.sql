@@ -38,7 +38,11 @@ VALUES ('Deportes')
      , ('Ciencia')
      , ('Política')
      , ('Arte')
-     , ('Cine');
+     , ('Cine')
+     , ('Actualidad')
+     , ('Cultura')
+     , ('Ocio')
+     , ('Tecnología');
 
 
 
