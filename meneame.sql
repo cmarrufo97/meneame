@@ -27,7 +27,7 @@ CREATE TABLE noticias
                     ON DELETE NO ACTION ON UPDATE CASCADE
   , categoria_id    bigint NOT NULL REFERENCES categorias(id)
                     ON DELETE NO ACTION ON UPDATE CASCADE  
-  , created_at      timestamp
+  , created_at      timestamp DEFAULT NOW()
 );
 
 INSERT INTO usuarios (login,password,email)
