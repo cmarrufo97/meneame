@@ -18,3 +18,12 @@ function comprobarContraseña($pdo, $contraseña, $usuario)
 
     return $correcto;
 }
+
+function getContraseñaUsuario($pdo,$usuario) {
+    $sent = $pdo->prepare("SELECT password FROM usuarios WHERE login = :usuario");
+    $sent->execute([':usuario' => $usuario]);
+
+    $res = $sent->fetchColumn();
+
+    return $res;
+}

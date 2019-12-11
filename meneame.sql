@@ -31,8 +31,8 @@ CREATE TABLE noticias
 );
 
 INSERT INTO usuarios (login,password,email)
-VALUES ('pepe','pepe','pepe@pepe.com')
-     , ('juan','juan','juan@gmail.com'); 
+VALUES ('pepe',crypt('pepe', gen_salt('bf',12)),'pepe@pepe.com')
+     , ('juan',crypt('juan',gen_salt('bf',12)),'juan@gmail.com'); 
          
 INSERT INTO categorias (denominacion)
 VALUES ('Deportes')

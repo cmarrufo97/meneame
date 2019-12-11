@@ -35,12 +35,13 @@
 
         if (!empty($usuario) && !empty($contraseña) && !empty($confirmar) && !empty($email)) {
             if ($contraseña == $confirmar) {
+                $encriptada = crypt($contraseña,null);      // Se encripta la contraseña y se mete en la DB.
                 if (!existeUsuario($usuario, $pdo)) {
                     // Realizar registro
                     $sent = $pdo->prepare('INSERT INTO usuarios (login,password,email)
                                            VALUES (:login,:password,:email)');
 
-                    $sent->execute([':login' => $usuario, ':password' => $contraseña, ':email' => $email]);
+                    $sent->execute([':login' => $usuario, ':password' => $encriptada, ':email' => $email]);
                     $_SESSION['login'] = $usuario;  // Auto login.
                     header('Location: ../index.php');
                     return;

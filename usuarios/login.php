@@ -19,7 +19,7 @@
     barra();
 
     if (!isset($_COOKIE['aceptar'])) {
-        alert('Este sitio web usa cookies. <a href="/cookies.php">Estoy de acuerdo</a>','info');
+        alert('Este sitio web usa cookies. <a href="/cookies.php">Estoy de acuerdo</a>', 'info');
     }
 
     $pdo = conectar();
@@ -30,17 +30,25 @@
 
     if (es_POST() && !empty($_POST)) {
         $login = trim($_POST['login']);
-        $password = trim($_POST['password']);
+        $password = h(trim($_POST['password']));
+        
         if (!empty($login) && !empty($password)) {
             if (comprobarUsuario($pdo, $_POST['login']) === false) {
                 alert('Login o contraseña incorrecto', 'danger');
             } else {
-                if (comprobarContraseña($pdo, $password, $login)) {
+                // if (comprobarContraseña($pdo, $password, $login)) {
+                //     $_SESSION['login'] = $_POST['login'];
+                //     header('Location: ../index.php');
+                //     return;
+                // } else {
+                //     alert('Login o contraseña incorrecto', 'danger');
+                // }
+                if (password_verify($password, getContraseñaUsuario($pdo, $login))) {
                     $_SESSION['login'] = $_POST['login'];
                     header('Location: ../index.php');
                     return;
                 } else {
-                    alert('Login o contraseña incorrecto', 'danger');
+                        alert('Login o contraseña incorrecto', 'danger');
                 }
             }
         } else {
