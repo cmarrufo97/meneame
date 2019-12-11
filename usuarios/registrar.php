@@ -27,10 +27,10 @@
     $pdo = conectar();
 
     if (isset($_POST) && !empty($_POST)) {
-        $usuario = trim($_POST['usuario']);
-        $contraseña = trim($_POST['contraseña']);
-        $confirmar = trim($_POST['confirmar']);
-        $email = trim($_POST['email']);
+        $usuario = h(trim($_POST['usuario']));
+        $contraseña = h(trim($_POST['contraseña']));
+        $confirmar = h(trim($_POST['confirmar']));
+        $email = h(trim($_POST['email']));
 
 
         if (!empty($usuario) && !empty($contraseña) && !empty($confirmar) && !empty($email)) {
