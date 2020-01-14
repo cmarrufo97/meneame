@@ -51,6 +51,7 @@
         } else {
             proyectarNoticias($sent, $pdo);
         }
+        
         ?>
     </div>
 

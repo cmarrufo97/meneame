@@ -77,7 +77,7 @@
 
     ?>
 
-    <?= dibujarFormularioNoticia($pdo, 'Modificar') ?>
+    <?= dibujarFormularioNoticiaModificar($pdo,$id) ?>
 
 
     <!-- Optional JavaScript -->
